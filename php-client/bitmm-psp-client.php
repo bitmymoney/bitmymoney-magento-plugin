@@ -9,8 +9,8 @@ class Bitmymoney_Payment
   public function __construct($api_key) {
     $this->api_key = $api_key;
     $this->base_url = 'https://bitmymoney.com/secure/pay/';
-    // doesn't work
-    //$this->base_url='http://test.bitmymoney.com/';
+    // test urls doesn't work
+    //$this->base_url = "https://bitmymoney.com/secure/pay/demo/";
   }
 
   public function startPayment($amount_eur, 
