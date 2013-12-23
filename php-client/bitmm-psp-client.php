@@ -98,7 +98,10 @@ class Bitmymoney_Payment {
                 $query = http_build_query($data);
             }
         }
-        $url = $this->base_url . $path . '?' . $query;
+        $url = $this->base_url . $path;
+        if ($query) {
+            $url .= '?' . $query;
+        }
         $ch = curl_init();
         /* @TODO add more checks for certificate etc */
         curl_setopt_array(
