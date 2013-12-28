@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__).'/../lib/bitmm-psp-client.php';
+
 class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
 {
     protected $_code                   = 'bitmm';
@@ -7,6 +9,8 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
     protected $_canUseCheckout         = TRUE;
     protected $_canUseInternal         = FALSE;
     protected $_canUseForMultishipping = FALSE;
+
+    protected $bitmm = NULL;
 
     /**
      * Config instance
@@ -22,6 +26,8 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
     {
         parent::_construct();
         $this->_init('bitmmbitcoin/bitcoin');
+	$this->bitmm =  new Bitmymoney_Payment(Mage::getStoreConfig('payment/bitmm/merchantid'),
+					       Mage::getStoreConfig('payment/bitmm/apikey'));
     }
 
     /**
