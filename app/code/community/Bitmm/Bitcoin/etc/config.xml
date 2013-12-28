@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bitcoin module configuration
+ *
+ * @package Bitmm
+ * @module Bitcoin
+ */
+ -->
+<config>
+    <modules>
+        <Bitmm_Bitcoin>
+            <version>0.1.0</version>
+        </Bitmm_Bitcoin>
+    </modules>
+    <global>
+<!--
+        <blocks>
+            <bitmmbitcoin>
+                <class>Bitmm_Bitcoin_Block</class>
+            </bitmmbitcoin>
+        </blocks>
+-->
+        <helpers>
+            <bitmmbitcoin>
+                <class>Bitmm_Bitcoin_Helper</class>
+            </bitmmbitcoin>
+        </helpers>
+
+        <models>
+            <bitmmbitcoin>
+                <class>Bitmm_Bitcoin_Model</class>
+                <resourceModel>bitcoin_mysql4</resourceModel>
+            </bitmmbitcoin>
+            <bitmmbitcoin_mysql4>
+                <class>Bitmm_Bitcoin_Model_Mysql4</class>
+                <entities>
+                    <bitmmbitcoin>
+                        <table>bitmm_bitcoin</table>
+                    </bitmmbitcoin>
+                </entities>
+            </bitmmbitcoin_mysql4>
+        </models>
+
+        <resources>
+            <bitmmbitcoin_setup>
+                <setup>
+                    <module>Bitmm_Bitcoin</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </bitmmbitcoin_setup>
+            <bitmmbitcoin_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </bitmmbitcoin_write>
+            <bitmmbitcoin_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </bitmmbitcoin_read>
+        </resources>
+    </global>
+
+    <frontend>
+        <routers>
+            <bitmmbitcoin>
+                <use>standard</use>
+                <args>
+                    <module>Bitmm_Bitcoin</module>
+                    <frontName>bitmmbitcoin</frontName>
+                </args>
+            </bitmmbitcoin>
+        </routers>
+        <layout>
+            <updates>
+                <bitmmbitcoin>
+                    <file>bitmmbitcoin.xml</file>
+                </bitmmbitcoin>
+            </updates>
+        </layout>
+    </frontend>
+
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <bitmm_bitcoin>
+                                            <title>Bitmm Bitcoin</title>
+                                        </bitmm_bitcoin>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+
+    <default>
+        <payment>
+            <bitmm>
+                <model>bitmmbitcoin/bitcoin</model>
+                <title>Bitmm Bitcoin</title>
+                <active>0</active>
+                <merchant_id />
+                <apikey />
+                <order_status>pending</order_status>
+            </bitmm>
+        </payment>
+    </default>
+</config>

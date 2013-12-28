@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Bitmm_Bitcoin>
+      <active>true</active>
+      <codePool>community</codePool>
+      <depends>
+	<Mage_Payment />
+      </depends>
+      <version>0.1.0</version>
+    </Bitmm_Bitcoin>
+  </modules>
+</config>
