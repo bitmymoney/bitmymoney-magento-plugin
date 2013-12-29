@@ -19,8 +19,8 @@ class Bitmymoney_Payment {
 	    $api_key, 
 	    $base_url='https://bitmymoney.com/secure/pay') 
     {
-        $this->api_key = $api_key;
 	$this->merchant_id = $merchant_id;
+        $this->api_key = $api_key;
         if (substr($base_url, strlen($base_url) - 1) == '/') {
             $base_url = substr($base_url, 0, strlen($base_url) - 1);
         }
@@ -39,7 +39,11 @@ class Bitmymoney_Payment {
     {
         $amount_eur = $this->normalizeAmount($amount_eur);
         $sign_fields = array(
-            'amount_eur', 'description', 'url_success', 'merchant_id','nonce');
+            'amount_eur', 
+	    'description', 
+	    'url_success', 
+	    'merchant_id',
+	    'nonce');
         $data = array('amount_eur' => $amount_eur,
             'description' => $description,
             'url_success' => $url_success,
@@ -59,7 +63,7 @@ class Bitmymoney_Payment {
         if ($this->verifySignature($response, $fields)) {
             return $response;
         } else {
-	    return false;
+	    return $response;
         }
     }
 
@@ -122,6 +126,7 @@ class Bitmymoney_Payment {
             $url .= '?' . $query;
         }
         $ch = curl_init();
+
         /* @TODO add more checks for certificate etc */
         curl_setopt_array(
             $ch,

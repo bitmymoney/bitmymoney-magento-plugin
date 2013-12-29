@@ -10,7 +10,7 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
     protected $_canUseInternal         = FALSE;
     protected $_canUseForMultishipping = FALSE;
 
-    protected $bitmm = NULL;
+    protected $bitmmclient = NULL;
 
     /**
      * Config instance
@@ -22,12 +22,14 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
     /**
      * Runs Bitcoin module
      */
-    public function _construct()
+    public function _construct ()
     {
+      $this->bitmmclient =  new Bitmymoney_Payment(Mage::getStoreConfig('payment/bitmm/merchantid'),
+						   Mage::getStoreConfig('payment/bitmm/apikey'));
+	
         parent::_construct();
         $this->_init('bitmmbitcoin/bitcoin');
-	$this->bitmm =  new Bitmymoney_Payment(Mage::getStoreConfig('payment/bitmm/merchantid'),
-					       Mage::getStoreConfig('payment/bitmm/apikey'));
+
     }
 
     /**
@@ -51,9 +53,33 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
 
     public function getBitcoinCheckoutFormFields()
     {
-     
-      $responseData= array();
-      return $responseData;
+      $checkout = Mage::getSingleton('checkout/session');
+      $last_order_id = $checkout->getLastRealOrderId();
+      $order = Mage::getModel('sales/order')->loadByIncrementId($last_order_id);
+      
+      /* payment information */
+      $description = 'test';
+      $url_success = Mage::getUrl('checkout/onepage/success');
+      /** @TODO use callback success */
+      $callback_success = NULL;
+      $amount_eur = $order->getBaseGrandTotal();
+      $url_failure = Mage::getUrl('bitmymoneybitcoin/payment/failure?order_id=' . $order_id);
+      /** @TODO use callback failure */
+      $callback_failure = NULL;
+      //$url_failure = Mage::getUrl('bitmymoneybitcoin/payment/report?status=failure&order_id=' . $order_id);
+      
+      /** @TODO use nonce */
+      $nonce = NULL;
+      $response = $this->bitmmclient->startPayment($amount_eur,
+						   $description,
+						   $url_success,
+						   $callback_success, 
+						   $order_id,
+						   $url_failure,
+						   $callback_failure,
+						   $nonce
+						   );
+      return $response;
     }
 
     /**
