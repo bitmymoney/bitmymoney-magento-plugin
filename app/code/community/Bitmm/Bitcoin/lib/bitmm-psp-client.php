@@ -1,6 +1,5 @@
 <?php
 
-
 class Bitmymoney_Payment {
   
     protected $base_url;
