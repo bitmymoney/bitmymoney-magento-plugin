@@ -9,9 +9,6 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
     protected $_canUseCheckout         = TRUE;
     protected $_canUseInternal         = FALSE;
     protected $_canUseForMultishipping = FALSE;
-
-    protected $bitmmclient = NULL;
-
     /**
      * Config instance
      * @var Mage_Bitcoin_Model_Config
@@ -24,9 +21,6 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
      */
     public function _construct ()
     {
-      $this->bitmmclient =  new Bitmymoney_Payment(Mage::getStoreConfig('payment/bitmm/merchantid'),
-						   Mage::getStoreConfig('payment/bitmm/apikey'));
-	
       parent::_construct();
       $this->_init('bitmmbitcoin/bitcoin');
 
@@ -61,27 +55,25 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
       /* payment information */
       $description = 'Test';
       $url_success = Mage::getUrl('checkout/onepage/success');
-      /** @TODO use callback success */
-      $callback_success = NULL;
+      $callback_success = Mage::getUrl('bitmmbitcoin/payment/report');
       $amount_eur = $order->getBaseGrandTotal();
-      $url_failure = Mage::getUrl('bitmmbitcoin/payment/failure?order_id=' . $order_id);
-      /** @TODO use callback failure */
-      $callback_failure = NULL;
-      //$url_failure = Mage::getUrl('bitmmbitcoin/payment/report?status=failure&order_id=' . $order_id);
+      $url_failure = Mage::getUrl('checkout/onepage/failure');
+      $callback_failure = Mage::getUrl('bitmmbitcoin/payment/report');
       
       /** @TODO use nonce */
       $nonce = NULL;
-      $this->bitmmclient =  new Bitmymoney_Payment(Mage::getStoreConfig('payment/bitmm/merchantid'),
-      						   Mage::getStoreConfig('payment/bitmm/apikey'));
-      $response = $this->bitmmclient->startPayment($amount_eur,
-						   $description,
-						   $url_success,
-						   $callback_success, 
-						   $order_id,
-						   $url_failure,
-						   $callback_failure,
-						   $nonce
-						   );
+      
+      $bitmmclient =  new Bitmymoney_Payment(Mage::getStoreConfig('payment/bitmm/merchantid'),
+					     Mage::getStoreConfig('payment/bitmm/apikey'));
+      $response = $bitmmclient->startPayment($amount_eur,
+					     $description,
+					     $url_success,
+					     $callback_success, 
+					     $order_id,
+					     $url_failure,
+					     $callback_failure,
+					     $nonce
+					     );
       return $response;
     }
 

@@ -10,8 +10,7 @@ class Bitmm_Bitcoin_PaymentController extends Mage_Core_Controller_Front_Action
   {
     /** @TODO put in helper */
     /** @TODO add check if merchant id and api key are set */
-    $this->bitmmclient =  new Bitmymoney_Payment(Mage::getStoreConfig('payment/bitmm/merchantid'),
-						 Mage::getStoreConfig('payment/bitmm/apikey'));
+   
     parent::_construct();
   }
     /**
@@ -33,24 +32,28 @@ document.location.href = \''.$response['url_pay'].'\';}, 2000);</script>';
       
       $this->getResponse()->setBody($html);
     }
-
   
-    public function successAction()
-    {
-    }
-
     public function failureAction()
     {
+      /* @TODO maybe implement this instead of the checkout/onepage/failure */
     }
 
+    /* callbacks from bitmymoney */
     public function reportAction()
     {
-      $data = json_decode(file_get_contents("php://input"), true);
-      if ($this->bitmmclient->verifySignature($data,
-					      array('txid',
-						    'order_id',
-						    'amount_eur',
-						    'status'))) {
+      $bitmmclient =  new Bitmymoney_Payment(Mage::getStoreConfig('payment/bitmm/merchantid'),
+					     Mage::getStoreConfig('payment/bitmm/apikey'));
+
+      //$data = json_decode(file_get_contents("php://input"), true); // according to docs
+      parse_str(file_get_contents("php://input"), $data);
+
+      /* @TODO retrieve info from server , to double check */
+
+      if ($bitmmclient->verifySignature($data,
+					array('txid',
+					      'order_id',
+					      'amount_eur',
+					      'status'))) {
 	
 	$order_id = $data['order_id'];
 	$status = $data['status'];
