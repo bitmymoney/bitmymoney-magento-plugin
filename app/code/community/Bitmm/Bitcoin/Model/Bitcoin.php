@@ -33,9 +33,17 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
      */
     public function canUseForCurrency($currencyCode)
     {
-        return TRUE;
+      if (!parent::canUseForCurrency($currencyCode)) {
+	return FALSE;
+      }
+      
+      if ($currencyCode !== 'EUR') {
+	return FALSE;
+      }
+      
+      return TRUE;    
     }
-
+    
     /**
      * Return Order place redirect url
      * @return string
