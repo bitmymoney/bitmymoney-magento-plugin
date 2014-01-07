@@ -43,11 +43,13 @@ document.location.href = \''.$response['url_pay'].'\';}, 2000);</script>';
     {
       $bitmmclient =  new Bitmymoney_Payment(Mage::getStoreConfig('payment/bitmm/merchantid'),
 					     Mage::getStoreConfig('payment/bitmm/apikey'));
+      $post_data = file_get_contents("php://input");
 
-      //$data = json_decode(file_get_contents("php://input"), true); // according to docs
-      parse_str(file_get_contents("php://input"), $data);
+      /* debug */
+      Mage::log("postdata=".$post_data);
 
-      /* @TODO retrieve info from server , to double check */
+      /* is www-form-urlencoded post data */
+      parse_str($post_data, $data);
 
       if ($bitmmclient->verifySignature($data,
 					array('txid',
@@ -71,6 +73,7 @@ document.location.href = \''.$response['url_pay'].'\';}, 2000);</script>';
 	  $order->registerCancellation('Payment cancelled', TRUE)->save();
 	  break;
 	}
+
       }
     }
 }
