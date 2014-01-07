@@ -65,12 +65,15 @@ document.location.href = \''.$response['url_pay'].'\';}, 2000);</script>';
 	switch ($status) {
 	case Bitmymoney_Payment::BITMM_SUCCESS:
 	  $order->getPayment()->
-	    registerCaptureNotification($order->getBaseGrandTotal());
+     registerCaptureNotification($order->getBaseGrandTotal());
 	  $order->getPayment()->setTransactionId($txid);
 	  $order->save();
 	  break;
 	case Bitmymoney_Payment::BITMM_CANCELLED:
 	  $order->registerCancellation('Payment cancelled', TRUE)->save();
+	  break;
+	default:
+	  $order->registerCancellation('Payment cancelled unknown status', TRUE)->save();
 	  break;
 	}
 
