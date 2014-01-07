@@ -114,6 +114,7 @@
                 <merchant_id />
                 <apikey />
                 <order_status>pending</order_status>
+		<order_description>Reference order number %</order_description>
             </bitmm>
         </payment>
     </default>

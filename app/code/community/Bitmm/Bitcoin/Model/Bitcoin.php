@@ -53,7 +53,7 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
       $order_id = $order->getIncrementId();
 
       /* payment information */
-      $description = 'Test';
+      $description = str_replace('%', $order_id, Mage::getStoreConfig('payment/bitmm/order_description'));
       $url_success = Mage::getUrl('checkout/onepage/success');
       $callback_success = Mage::getUrl('bitmmbitcoin/payment/report');
       $amount_eur = $order->getBaseGrandTotal();
