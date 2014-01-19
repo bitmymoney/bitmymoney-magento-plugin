@@ -67,10 +67,11 @@ class Bitmm_Bitcoin_Model_Bitcoin extends Mage_Payment_Model_Method_Abstract
       $amount_eur = $order->getBaseGrandTotal();
       $url_failure = Mage::getUrl('checkout/onepage/failure');
       $callback_failure = Mage::getUrl('bitmmbitcoin/payment/report'). '?status=failure&order_id=' . $order_id;
-      
-      /** @TODO use nonce */
-      $nonce = NULL;
-      
+
+      /* use mcrypt or other source of secure random number */
+      $iv = mcrypt_create_iv(4, MCRYPT_DEV_RANDOM);
+      $nonce = implode(unpack('L', $iv));
+
       $bitmmclient =  new Bitmymoney_Payment(Mage::getStoreConfig('payment/bitmm/merchantid'),
 					     Mage::getStoreConfig('payment/bitmm/apikey'));
       $response = $bitmmclient->startPayment($amount_eur,
